@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html class="wide wow-animation" lang="en">
+<html class="wide wow-animation" lang="fr">
   <head>
     <!-- Site Title-->
-    <title>Références</title>
+    <title>Accueil</title>
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -22,11 +22,10 @@
     </div>
     <!-- Page-->
     <div class="page">
-      <!-- Page header-->
       <header class="page-header">
         <!-- RD Navbar-->
         <div class="rd-navbar-wrap">
-          <nav class="rd-navbar rd-navbar_default" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-lg-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true" data-lg-stick-up-offset="35px" data-xl-stick-up-offset="35px" data-xxl-stick-up-offset="35px">
+          <nav class="rd-navbar rd-navbar_transparent rd-navbar_boxed" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-lg-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true" data-lg-stick-up-offset="35px" data-xl-stick-up-offset="35px" data-xxl-stick-up-offset="35px" data-body-class="rd-navbar-absolute">
             <!-- RD Navbar Top Panel-->
             <div class="rd-navbar-top-panel">
               <div class="rd-navbar-top-panel__main">
@@ -73,13 +72,13 @@
               </div>
               <!-- RD Navbar Nav-->
               <div class="rd-navbar-nav-wrap rd-navbar-search_not-collapsable">
-                
+          
                 <div class="rd-navbar-search_collapsable">
                   <ul class="rd-navbar-nav">
-                    <li><a href="index.html">Accueil</a></li>
+                    <li class="active"><a href="index.html">Accueil</a></li>
                     <li><a href="about.html">Société</a>
                     </li>
-                    <li ><a href="services.html">Services</a>
+                    <li><a href="services.html">Services</a>
                       <ul class="rd-navbar-dropdown">
                         <li><a href="climatisation.html">Climatisation</a>
                         </li>
@@ -101,7 +100,7 @@
                         </li>
                       </ul>
                     </li>
-                    <li class="active"><a href="projects.html">Références</a></li>
+                    <li><a href="projects.html">Références</a></li>
                     <li><a href="realisation.html">Réalisation</a>
                       <ul class="rd-navbar-dropdown">
                         <li><a href="logement.html">Logement</a>
@@ -135,93 +134,85 @@
           </nav>
         </div>
       </header>
-      <!-- Parallax header-->
-      <section class="bg-gray-dark">
-        <section class="section parallax-container" data-parallax-img="images/bg-image-1.jpg">
-          <div class="parallax-content parallax-header">
-            <div class="parallax-header__inner">
-              <div class="parallax-header__content">
+      <!-- Swiper-->
+      <section>
+        <div class="swiper-container swiper-slider swiper-slider_fullheight bg-gray-dark" data-simulate-touch="false" data-loop="true" data-autoplay="5500">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide" data-slide-bg="images/slider-slide-1-1920x1080.jpg">
+              <div class="swiper-slide-caption text-center">
                 <div class="container">
-                  <div class="row justify-content-sm-center">
-                    <div class="col-md-10 col-xl-8">
-                      <h2 class="heading-decorated">Nos Réferences</h2>
+                  <div class="row justify-content-lg-center">
+                    <div class="col-lg-10">
+                      <h1 class="heading-decorated" data-caption-animate="fadeInUpSmall" data-caption-delay="100">Services</h1>
+                      <h4 class="text-boxed" data-caption-animate="fadeInUpSmall" data-caption-delay="300">De nombreux services proposés </br> à votre disposition</h4><a class="button button-primary" data-caption-animate="fadeInUpSmall" data-caption-delay="350" href="services.html">Nos Services</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide text-center" data-slide-bg="images/slider-slide-2-1920x1080.jpg">
+              <div class="swiper-slide-caption">
+                <div class="container">
+                  <div class="row justify-content-lg-center">
+                    <div class="col-lg-10">
+                      <h1 class="heading-decorated" data-caption-animate="fadeInUpSmall" data-caption-delay="100">Nos projets</h1>
+                      <h4 data-caption-animate="fadeInUpSmall" data-caption-delay="300">De nombreuses réalisations effectuées dans diverses structures</h4><a class="button button-primary" data-caption-animate="fadeInUpSmall" data-caption-delay="350" href="realisation.html">Voir nos réalisation</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide text-center" data-slide-bg="images/slider-slide-3-1920x1080.jpg">
+              <div class="swiper-slide-caption">
+                <div class="container">
+                  <div class="row justify-content-lg-center">
+                    <div class="col-lg-10">
+                      <h1 class="heading-decorated" data-caption-animate="fadeInUpSmall" data-caption-delay="100">Votre projet</h1>
+                      <h4 data-caption-animate="fadeInUpSmall" data-caption-delay="300">Si vous pouvez l'imaginer, alors nous pouvons le construire </br>Dite nous en plus sur votre projet</h4><a class="button button-primary" data-caption-animate="fadeInUpSmall" data-caption-delay="350" href="contacts.html">Contactez Nous</a>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </section>
-
+          <!-- Swiper Pagination-->
+          <div class="swiper-pagination"></div>
+          <!-- Swiper Navigation-->
+          <div class="swiper-button-prev linear-icon-chevron-left"></div>
+          <div class="swiper-button-next linear-icon-chevron-right"></div>
+        </div>
       </section>
 
-      <section class="section-lg bg-default text-center">
+     
+
+      <!-- Our History-->
+      <section class="section-md bg-gray-lighter">
         <div class="container">
-          <h4 class="heading-decorated">Nos Références</h4>
-          <div class="row row-70 offset-top-1">
-            <div class="col-md-6 col-lg-4">
-              <!-- Thumb flat-->
-              <article class="thumb-flat"><img class="thumb-flat__image" src="images/Logo-BANITI.png" alt="" width="200"/></article>
+          <div class="row justify-content-md-center row-30 row-md-50">
+            <div class="col-md-11 col-lg-10 col-xl-6">
+              <h4 class="heading-decorated">Votre température idéale</h4>
+              <p class="heading-6 text-width-1">Un projet de rénovation ou d’installation climatique ?</br>
+                Besoin d'une mise en place d’un système de chauffage ?</br>
+                Des conseils quant à vos équipements de ventilation, de plomberie et de protection incendie ?…</br></br></p>
+              <p>
+                Trie energie, vous accompagne et vous conseille tout au long de vos projets de réalisation d’installation, de dépannage ou de rénovations dans les secteurs de :</br>
+                
+                Génie Climatique : chauffage, climatisation, ventilation</br>
+                Plomberie</br>
+                Fluides industriels</br>
+                Protection incendie</br>
+                Grâce à notre expérience et à notre équipe hautement qualifiée, Trie energie vous propose les solutions les plus adaptées à vos besoins spécifiques.</br>
+                
+                C’est parce que Trie energie a le souci de l’écoute, de l’efficacité et de la satisfaction client, que nous sommes avant tout votre partenaire de votre température idéale et veillons à créer pour vous les meilleures conditions de confort.</p><a class="button button-primary" href="about.html">En savoir plus</a>
             </div>
-            <div class="col-md-6 col-lg-4">
-              <!-- Thumb flat-->
-              <article class="thumb-flat"><img class="thumb-flat__image" src="images/Logo-BATEG.jpeg" alt="" width="200"/></article>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <!-- Thumb flat-->
-              <article class="thumb-flat"><img class="thumb-flat__image" src="images/logo-default-659x78.png" alt="" width="300"/></article>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <!-- Thumb flat-->
-              <article class="thumb-flat"><img class="thumb-flat__image" src="images/Logo-EIFFAGE.bmp" alt="" width="200"/></article>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <!-- Thumb flat-->
-              <article class="thumb-flat"><img class="thumb-flat__image" src="images/Logo-KILIC.png" alt="" width="200"/></article>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <!-- Thumb flat-->
-              <article class="thumb-flat"><img class="thumb-flat__image" src="images/LOGO-SACIEG.png" alt="" width="100"/></article>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <!-- Thumb flat-->
-              <article class="thumb-flat"><img class="thumb-flat__image" src="images/Logo-SRC.png" alt="" width="100"/></article>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <!-- Thumb flat-->
-              <article class="thumb-flat"><img class="thumb-flat__image" src="images/Logo20Bati-Renov.jpeg" alt="" width="200"/></article>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <!-- Thumb flat-->
-              <article class="thumb-flat"><img class="thumb-flat__image" src="images/LOGO_SBG_2017-002.jpeg" alt="" width="200"/></article>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <!-- Thumb flat-->
-              <article class="thumb-flat"><img class="thumb-flat__image" src="images/logo_sylvametal_2009.jpeg" alt="" width="300"/></article>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <!-- Thumb flat-->
-              <article class="thumb-flat"><img class="thumb-flat__image" src="images/ETPO.png" alt="" width="200"/></article>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <!-- Thumb flat-->
-              <article class="thumb-flat"><img class="thumb-flat__image" src="images/LOGIREP.jpeg" alt="" width="200"/></article>
+            <div class="col-md-11 col-lg-10 col-xl-6"><img src="images/home-1-652x491.jpg" alt="" width="652" height="491"/>
             </div>
           </div>
         </div>
       </section>
 
-
-      <!-- Call to Action-->
-      <section class="section-md bg-accent text-center">
-        <div class="container">
-          <div class="row justify-content-md-center">
-            <div class="col-md-11 col-lg-9 col-xl-8">
-              <h4 class="heading-decorated">SI VOUS POUVEZ L’IMAGINER, ALORS NOUS POUVONS LE CONSTRUIRE. </br> DITES-NOUS EN PLUS SUR VOTRE PROJET !</h4><a class="button button-primary" href="contacts.html">Contactez Nous</a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- Projects-->
+      
 
       <!-- Page Footer-->
       <section class="pre-footer-corporate bg-gray-dark">
