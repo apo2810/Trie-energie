@@ -664,6 +664,144 @@
 			}
 		}
 
+		/**
+		 * @desc Google map function for getting latitude and longitude
+		 */
+		function getLatLngObject(str, marker, map, callback) {
+			var coordinates = {};
+			try {
+				coordinates = JSON.parse(str);
+				callback(new google.maps.LatLng(
+					coordinates.lat,
+					coordinates.lng
+				), marker, map)
+			} catch (e) {
+				map.geocoder.geocode({'address': str}, function (results, status) {
+					if (status === google.maps.GeocoderStatus.OK) {
+						var latitude = results[0].geometry.location.lat();
+						var longitude = results[0].geometry.location.lng();
+
+						callback(new google.maps.LatLng(
+							parseFloat(latitude),
+							parseFloat(longitude)
+						), marker, map)
+					}
+				})
+			}
+		}
+
+		/**
+		 * @desc Initialize Google maps
+		 */
+		function initMaps() {
+			var key;
+
+			for ( var i = 0; i < plugins.maps.length; i++ ) {
+				if ( plugins.maps[i].hasAttribute( "data-key" ) ) {
+					key = plugins.maps[i].getAttribute( "data-key" );
+					break;
+				}
+			}
+
+			$.getScript('//maps.google.com/maps/api/js?'+ ( key ? 'key='+ key + '&' : '' ) +'sensor=false&libraries=geometry,places&v=quarterly', function () {
+				var geocoder = new google.maps.Geocoder;
+				for (var i = 0; i < plugins.maps.length; i++) {
+					var zoom = parseInt(plugins.maps[i].getAttribute("data-zoom"), 10) || 11;
+					var styles = plugins.maps[i].hasAttribute('data-styles') ? JSON.parse(plugins.maps[i].getAttribute("data-styles")) : [];
+					var center = plugins.maps[i].getAttribute("data-center") || "New York";
+
+					// Initialize map
+					var map = new google.maps.Map(plugins.maps[i].querySelectorAll(".google-map")[0], {
+						zoom: zoom,
+						styles: styles,
+						scrollwheel: false,
+						center: {lat: 0, lng: 0}
+					});
+
+					// Add map object to map node
+					plugins.maps[i].map = map;
+					plugins.maps[i].geocoder = geocoder;
+					plugins.maps[i].keySupported = true;
+					plugins.maps[i].google = google;
+
+					// Get Center coordinates from attribute
+					getLatLngObject(center, null, plugins.maps[i], function (location, markerElement, mapElement) {
+						mapElement.map.setCenter(location);
+					});
+
+					// Add markers from google-map-markers array
+					var markerItems = plugins.maps[i].querySelectorAll(".google-map-markers li");
+
+					if (markerItems.length){
+						var markers = [];
+						for (var j = 0; j < markerItems.length; j++){
+							var markerElement = markerItems[j];
+							getLatLngObject(markerElement.getAttribute("data-location"), markerElement, plugins.maps[i], function(location, markerElement, mapElement){
+								var icon = markerElement.getAttribute("data-icon") || mapElement.getAttribute("data-icon");
+								var activeIcon = markerElement.getAttribute("data-icon-active") || mapElement.getAttribute("data-icon-active");
+								var info = markerElement.getAttribute("data-description") || "";
+								var infoWindow = new google.maps.InfoWindow({
+									content: info
+								});
+								markerElement.infoWindow = infoWindow;
+								var markerData = {
+									position: location,
+									map: mapElement.map
+								}
+								if (icon){
+									markerData.icon = icon;
+								}
+								var marker = new google.maps.Marker(markerData);
+								markerElement.gmarker = marker;
+								markers.push({markerElement: markerElement, infoWindow: infoWindow});
+								marker.isActive = false;
+								// Handle infoWindow close click
+								google.maps.event.addListener(infoWindow,'closeclick',(function(markerElement, mapElement){
+									var markerIcon = null;
+									markerElement.gmarker.isActive = false;
+									markerIcon = markerElement.getAttribute("data-icon") || mapElement.getAttribute("data-icon");
+									markerElement.gmarker.setIcon(markerIcon);
+								}).bind(this, markerElement, mapElement));
+
+
+								// Set marker active on Click and open infoWindow
+								google.maps.event.addListener(marker, 'click', (function(markerElement, mapElement) {
+									if (markerElement.infoWindow.getContent().length === 0) return;
+									var gMarker, currentMarker = markerElement.gmarker, currentInfoWindow;
+									for (var k =0; k < markers.length; k++){
+										var markerIcon;
+										if (markers[k].markerElement === markerElement){
+											currentInfoWindow = markers[k].infoWindow;
+										}
+										gMarker = markers[k].markerElement.gmarker;
+										if (gMarker.isActive && markers[k].markerElement !== markerElement){
+											gMarker.isActive = false;
+											markerIcon = markers[k].markerElement.getAttribute("data-icon") || mapElement.getAttribute("data-icon")
+											gMarker.setIcon(markerIcon);
+											markers[k].infoWindow.close();
+										}
+									}
+
+									currentMarker.isActive = !currentMarker.isActive;
+									if (currentMarker.isActive) {
+										if (markerIcon = markerElement.getAttribute("data-icon-active") || mapElement.getAttribute("data-icon-active")){
+											currentMarker.setIcon(markerIcon);
+										}
+
+										currentInfoWindow.open(map, marker);
+									}else{
+										if (markerIcon = markerElement.getAttribute("data-icon") || mapElement.getAttribute("data-icon")){
+											currentMarker.setIcon(markerIcon);
+										}
+										currentInfoWindow.close();
+									}
+								}).bind(this, markerElement, mapElement))
+							})
+						}
+					}
+				}
+			});
+		}
 
 		// Additional class on html if mac os.
 		if (navigator.platform.match(/(Mac)/i)) {
@@ -739,6 +877,11 @@
 			plugins.copyrightYear.text(initialDate.getFullYear());
 		}
 
+		// Google maps
+		if( plugins.maps.length ) {
+			lazyInit( plugins.maps, initMaps );
+		}
+
 		// Add custom styling options for input[type="radio"]
 		if (plugins.radio.length) {
 			for (var i = 0; i < plugins.radio.length; i++) {
@@ -808,6 +951,92 @@
 			}
 		}
 
+		// RD Search
+		if (plugins.search.length || plugins.searchResults) {
+			var handler = "bat/rd-search.php";
+			var defaultTemplate = '<h5 class="search-title"><a target="_top" href="#{href}" class="search-link">#{title}</a></h5>' +
+				'<p>...#{token}...</p>' +
+				'<p class="match"><em>Terms matched: #{count} - URL: #{href}</em></p>';
+			var defaultFilter = '*.html';
+
+			if (plugins.search.length) {
+				for (var i = 0; i < plugins.search.length; i++) {
+					var searchItem = $(plugins.search[i]),
+						options = {
+							element: searchItem,
+							filter: (searchItem.attr('data-search-filter')) ? searchItem.attr('data-search-filter') : defaultFilter,
+							template: (searchItem.attr('data-search-template')) ? searchItem.attr('data-search-template') : defaultTemplate,
+							live: (searchItem.attr('data-search-live')) ? searchItem.attr('data-search-live') : false,
+							liveCount: (searchItem.attr('data-search-live-count')) ? parseInt(searchItem.attr('data-search-live'), 10) : 4,
+							current: 0, processed: 0, timer: {}
+						};
+
+					var $toggle = $('.rd-navbar-search-toggle');
+					if ($toggle.length) {
+						$toggle.on('click', (function (searchItem) {
+							return function () {
+								if (!($(this).hasClass('active'))) {
+									searchItem.find('input').val('').trigger('propertychange');
+								}
+							}
+						})(searchItem));
+					}
+
+					if (options.live) {
+						var clearHandler = false;
+
+						searchItem.find('input').on("input propertychange", $.proxy(function () {
+							this.term = this.element.find('input').val().trim();
+							this.spin = this.element.find('.input-group-addon');
+
+							clearTimeout(this.timer);
+
+							if (this.term.length > 2) {
+								this.timer = setTimeout(liveSearch(this), 200);
+
+								if (clearHandler === false) {
+									clearHandler = true;
+
+									$body.on("click", function (e) {
+										if ($(e.toElement).parents('.rd-search').length === 0) {
+											$('#rd-search-results-live').addClass('cleared').html('');
+										}
+									})
+								}
+
+							} else if (this.term.length === 0) {
+								$('#' + this.live).addClass('cleared').html('');
+							}
+						}, options, this));
+					}
+
+					searchItem.submit($.proxy(function () {
+						$('<input />').attr('type', 'hidden')
+							.attr('name', "filter")
+							.attr('value', this.filter)
+							.appendTo(this.element);
+						return true;
+					}, options, this))
+				}
+			}
+
+			if (plugins.searchResults.length) {
+				var regExp = /\?.*s=([^&]+)\&filter=([^&]+)/g;
+				var match = regExp.exec(location.search);
+
+				if (match !== null) {
+					$.get(handler, {
+						s: decodeURI(match[1]),
+						dataType: "html",
+						filter: match[2],
+						template: defaultTemplate,
+						live: ''
+					}, function (data) {
+						plugins.searchResults.html(data);
+					})
+				}
+			}
+		}
 		
 		// Swiper
 		if (plugins.swiper.length) {
@@ -1195,7 +1424,159 @@
 
 			}
 		}
+		
 
+		// RD Audio player
+		if (plugins.rdAudioPlayer.length && !isNoviBuilder) {
+			var i;
+			for (i = 0; i < plugins.rdAudioPlayer.length; i++) {
+				$(plugins.rdAudioPlayer[i]).RDAudio();
+			}
+		}
+
+		// RD Calendar
+		if (plugins.calendar.length) {
+			var i;
+			for (i = 0; i < plugins.calendar.length; i++) {
+				var calendarItem = $(plugins.calendar[i]);
+
+				calendarItem.rdCalendar({
+					days: calendarItem.attr("data-days") ? calendarItem.attr("data-days").split(/\s?,\s?/i) : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+					month: calendarItem.attr("data-months") ? calendarItem.attr("data-months").split(/\s?,\s?/i) : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+				});
+			}
+		}
+
+		// Booking Calendar
+		if (plugins.bookingCalendar.length) {
+			var i;
+			for (i = 0; i < plugins.bookingCalendar.length; i++) {
+				var calendarItem = $(plugins.bookingCalendar[i]);
+
+				calendarItem.rdCalendar({
+					days: calendarItem.attr("data-days") ? calendarItem.attr("data-days").split(/\s?,\s?/i) : ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+					month: calendarItem.attr("data-months") ? calendarItem.attr("data-months").split(/\s?,\s?/i) : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+				});
+
+				var temp = $('.rdc-table_has-events');
+
+				for (i = 0; i < temp.length; i++) {
+					var $this = $(temp[i]);
+
+					$this.on("click", i, function (event) {
+						event.preventDefault();
+						event.stopPropagation();
+
+						$(this).toggleClass("opened");
+
+						var tableEvents = $('.rdc-table_events'),
+							ch = tableEvents.outerHeight(),
+							currentEvent = $(this).children('.rdc-table_events'),
+							eventCell = $('#calendarEvent' + event.data),
+							animationDuration = 250;
+
+						if ($(this).hasClass("opened")) {
+
+							$(this).parent().after("<tr id='calendarEvent" + event.data + "' style='height: 0'><td colspan='7'></td></tr>");
+							currentEvent.clone().appendTo($('#calendarEvent' + event.data + ' td'));
+							$('#calendarEvent' + event.data + ' .rdc-table_events').css("height", "0");
+							$('#calendarEvent' + event.data + ' .rdc-table_events').animate({height: ch + "px"}, animationDuration);
+
+						} else {
+							$('#calendarEvent' + event.data + ' .rdc-table_events').animate({height: "0"}, animationDuration);
+
+							setTimeout(function () {
+								eventCell.remove();
+							}, animationDuration);
+
+						}
+					});
+				}
+				;
+
+				$(window).on('resize', function () {
+					if ($('.rdc-table_has-events').hasClass('active')) {
+						var tableEvents = $('.rdc-table_events'),
+							ch = tableEvents.outerHeight(),
+							tableEventCounter = $('.rdc-table_events-count');
+						tableEventCounter.css({
+							height: ch + 'px'
+						});
+					}
+				});
+
+				$('input[type="radio"]').on("click", function () {
+					if ($(this).attr("value") == "register") {
+						$(".register-form").hide();
+						$(".login-form").fadeIn('slow');
+					}
+					if ($(this).attr("value") == "login") {
+						$(".register-form").fadeIn('slow');
+						$(".login-form").hide();
+					}
+				});
+
+				$('.rdc-next, .rdc-prev').on("click", function () {
+					var temp = $('.rdc-table_has-events');
+
+					for (i = 0; i < temp.length; i++) {
+						var $this = $(temp[i]);
+
+						$this.on("click", i, function (event) {
+							event.preventDefault();
+							event.stopPropagation();
+
+							$(this).toggleClass("opened");
+
+							var tableEvents = $('.rdc-table_events'),
+								ch = tableEvents.outerHeight(),
+								currentEvent = $(this).children('.rdc-table_events'),
+								eventCell = $('#calendarEvent' + event.data),
+								animationDuration = 250;
+
+							if ($(this).hasClass("opened")) {
+
+								$(this).parent().after("<tr id='calendarEvent" + event.data + "' style='height: 0'><td colspan='7'></td></tr>");
+								currentEvent.clone().appendTo($('#calendarEvent' + event.data + ' td'));
+								$('#calendarEvent' + event.data + ' .rdc-table_events').css("height", "0");
+								$('#calendarEvent' + event.data + ' .rdc-table_events').animate({height: ch + "px"}, animationDuration);
+
+							} else {
+								$('#calendarEvent' + event.data + ' .rdc-table_events').animate({height: "0"}, animationDuration);
+
+								setTimeout(function () {
+									eventCell.remove();
+								}, animationDuration);
+
+							}
+						});
+					}
+					;
+
+					$(window).on('resize', function () {
+						if ($('.rdc-table_has-events').hasClass('active')) {
+							var tableEvents = $('.rdc-table_events'),
+								ch = tableEvents.outerHeight(),
+								tableEventCounter = $('.rdc-table_events-count');
+							tableEventCounter.css({
+								height: ch + 'px'
+							});
+						}
+					});
+
+					$('input[type="radio"]').on("click", function () {
+						if ($(this).attr("value") == "login") {
+							$(".register-form").hide();
+							$(".login-form").fadeIn('slow');
+						}
+						if ($(this).attr("value") == "register") {
+							$(".register-form").fadeIn('slow');
+							$(".login-form").hide();
+						}
+					});
+				});
+			}
+		}
 
 		// Google ReCaptcha
 		if (plugins.captcha.length) {
