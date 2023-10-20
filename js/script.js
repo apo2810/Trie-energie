@@ -39,8 +39,6 @@
 			owl:                     $( '.owl-carousel' ),
 			preloader:               $( '.preloader' ),
 			swiper:                  $( '.swiper-slider' ),
-			search:                  $( '.rd-search' ),
-			searchResults:           $( '.rd-search-results' ),
 			lightGallery:            $( "[data-lightgallery='group']" ),
 			lightGalleryItem:        $( "[data-lightgallery='item']" ),
 			lightDynamicGalleryItem: $( "[data-lightgallery='dynamic']" ),
