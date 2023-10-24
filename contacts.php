@@ -178,30 +178,18 @@
             <div class="col-md-7 col-lg-8">
               <h4 class="heading-decorated">Contactez-nous</h4>
               <!-- RD Mailform-->
-              <form method="post">
-                <label>Votre email</label>
-                <input type="email" name="email" required>
-                <label>Message</label>
-                <textarea name="message" required></textarea>
-                <input type="submit">
-              </form>
-              
-              <form class="rd-mailform rd-mailform_style-1" data-form-output="form-output-global" data-form-type="contact" method="post" action="bat/rd-mailform.php">
+              <form class="rd-mailform rd-mailform_style-1" data-form-output="form-output-global" data-form-type="contact" method="post">
                 <div class="form-wrap form-wrap_icon linear-icon-man">
-                  <input class="form-input" id="contact-name" type="text" name="name" data-constraints="@Required">
+                  <input class="form-input" id="contact-name" type="text" name="name" required>
                   <label class="form-label" for="contact-name">Votre nom</label>
                 </div>
-                <div class="form-wrap form-wrap_icon linear-icon-envelope">
-                  <input class="form-input" id="contact-email" type="email" name="email" data-constraints="@Email @Required">
+                <div class="form-wrap form-wrap_icon linear-icon-man">
+                  <input class="form-input" id="contact-email" type="email" name="email" required>
                   <label class="form-label" for="contact-email">Votre e-mail</label>
                 </div>
-                <div class="form-wrap form-wrap_icon linear-icon-feather">
-                  <textarea class="form-input" id="contact-message" name="message" data-constraints="@Required"></textarea>
+                <div class="form-wrap form-wrap_icon linear-icon-man">
+                  <textarea class="form-input" id="contact-message" name="message" required></textarea>
                   <label class="form-label" for="contact-message">Votre demande</label>
-                </div>
-                <div class="form-wrap form-validation-left">
-                  <!--Google captcha-->
-                  <div class="recaptcha" id="captcha1" data-sitekey="6LfZlSETAAAAAC5VW4R4tQP8Am_to4bM3dddxkEt" data-auto-size=""></div>
                 </div>
                 <button class="button button-primary" type="submit">envoyer</button>
               </form>
