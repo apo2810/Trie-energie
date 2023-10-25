@@ -127,7 +127,7 @@
                         </li>
                       </ul>
                     </li>
-                    <li><a href="contacts.html">Contacts</a>
+                    <li><a href="contacts.php">Contacts</a>
                     </li>
                   </ul>
                 </div>
@@ -193,6 +193,7 @@
                 </div>
                 <button class="button button-primary" type="submit">envoyer</button>
               </form>
+              
             </div>
           </div>
         </div>
@@ -202,7 +203,7 @@
       <section class="pre-footer-corporate bg-gray-dark">
         <div class="container">
           <div class="row justify-content-sm-center justify-content-lg-start row-30 row-md-60">
-            <div class="col-sm-10 col-md-6 col-lg-10 col-xl-5"><a class="brand" href="index.html"><img src="images/logo-inverse-659x78.png" alt="" width="329" height="39"/></a>
+            <div class="col-sm-10 col-md-6 col-lg-10 col-xl-5"><a class="brand" href="index.html"><img src="images/logo-inverse-659x78.png" alt="logo trie energie" width="329" height="39"/></a>
               <p>Trie Energie est une jeune entreprise qui se créé grâce à son savoir-faire et c’est partenaire de longues dates avec une expérience de près de 21 ans du secteur du BTP en : CVC/ Plomberie/spécialisé dans le domaine de la Plomberie /CVC/froid Grande cuisine</p>
             </div>
             <div class="col-sm-10 col-md-6 col-lg-4 col-xl-3">
@@ -210,7 +211,7 @@
               <ul class="list-xxs list-primary">
                 <li><a href="projects.html">Nos projets</a></li>
                 <li><a href="services.html">Nos Services</a></li>
-                <li><a href="contacts.html">Nous Contacter</a></li>
+                <li><a href="contacts.php">Nous Contacter</a></li>
               </ul>
             </div>
             
@@ -279,9 +280,10 @@
 
         $message = '<h1>Message envoyé depuis la page Contact de trieenergie</h1>
         <p><b>Email : </b>' . $_POST['email'] . '<br>
+        <p><b>nom : </b>' . $_POST['name'] . '<br>
         <b>Message : </b>' . htmlspecialchars($_POST['message']) . '</p>';
 
-        $retour = mail('apolline.fert@gmail.com', 'Envoi depuis page Contact', $message, $entete);
+        $retour = mail('jmhavet@trie-energie.com', 'Envoi depuis page Contact', $message, $entete);
         if($retour)
             echo '<p>Votre message a bien été envoyé.</p>';
     }
